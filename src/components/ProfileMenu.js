@@ -1,50 +1,55 @@
 import React, { useState } from 'react';
-import { Avatar, IconButton, Menu, MenuItem, Divider } from '@mui/material';
-import { AccountCircle } from '@mui/icons-material';
+import { Menu, MenuItem, IconButton } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import EditProfileModal from './EditProfile'; // Modal to handle profile editing
+
 import { useNavigate } from 'react-router-dom';
 
+
 const ProfileMenu = () => {
-  const [anchorEl, setAnchorEl] = useState(null); // State to manage the Menu
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
+
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+
   const navigate = useNavigate();
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    // Clear user data and redirect to login page
-    // localStorage.removeItem('userRole');
-    // localStorage.removeItem('userData'); // if you store user data
-    navigate('/login');
-  };
-
   const handleEditProfile = () => {
-    // Redirect to the Edit Profile page (create this page as per your requirements)
-    navigate('/edit-profile');
+    setEditProfileOpen(true);
+    handleMenuClose();
   };
+
+  const handleLogout = () =>{
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId'); // Add any other user-related data if stored
+
+    // Redirect to the login page
+    navigate('/');
+  }
 
   return (
-    <div>
-      <IconButton onClick={handleMenuOpen} size="large">
-        <Avatar>
-          <AccountCircle />
-        </Avatar>
+    <>
+      {/* Profile Icon */}
+      <IconButton onClick={handleMenuOpen}>
+        <AccountCircleIcon fontSize="large" color="gray" />
       </IconButton>
+
+      {/* Dropdown Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
-        sx={{ mt: 1 }}
       >
         <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
-        <Divider />
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
-    </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        open={editProfileOpen}
+        onClose={() => setEditProfileOpen(false)}
+      />
+    </>
   );
 };
 

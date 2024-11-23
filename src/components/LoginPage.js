@@ -27,12 +27,12 @@ const LoginPage = () => {
       const response = await axios.post('/api/login', { email, password });
   
       if (response.status === 200) {
-        // Assuming the API response contains a 'userRole' field
-        const userRole = response.data.userRole;  // Get the role from the response
+        const { userRole, userID } = response.data;  // Assuming the API response contains userRole and userID
         
-        // Store the user role (you can also store other user data as needed)
+        // Store the user role and userID in localStorage
         localStorage.setItem('userRole', userRole);
-  
+        localStorage.setItem('userID', userID);  // Storing userID
+
         // Redirect to the respective dashboard based on the user role
         if (userRole === 'admin') {
           navigate('/admin-dashboard'); // Redirect to Admin Dashboard
