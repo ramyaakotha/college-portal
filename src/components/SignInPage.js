@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Card, Typography, Button, TextField, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from './../assets/background.jpg';  // Adjust the path as needed
+import axios from 'axios';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -30,11 +31,11 @@ const SignInPage = () => {
     setLoading(true);
     try {
       // Call your email validation API here
-      const emailExists = await validateEmail(email); // Assume this is your API call to check email
-      if (emailExists) {
-        setEmailError('Email already exists. Please use a different email.');
-        setLoading(false);
-      } else {
+      // const emailExists = await validateEmail(email); // Assume this is your API call to check email
+      // if (emailExists) {
+      //   setEmailError('Email already exists. Please use a different email.');
+      //   setLoading(false)}
+      if (email){
         // If email does not exist, trigger OTP sending API
         const otpResponse = await sendOtpToEmail(email); // Assume this is your API call to send OTP
         if (otpResponse.success) {
@@ -222,17 +223,38 @@ const validateEmail = async (email) => {
 
 const sendOtpToEmail = async (email) => {
   // Simulate API call to send OTP to email
+  const response = await axios.post('http://127.0.0.1:8081/api/register/initiate', {email})
   return { success: true };  // Simulate successful OTP sending
 };
 
 const verifyOtp = async (email, otp) => {
   // Simulate API call to verify OTP
-  return { success: true };  // Simulate successful OTP verification
+  const response = await axios.post('http://127.0.0.1:8081/api/register/verify', {email, otp})
+  console.log(response, "otp api");
+  if (response.status === 200) {
+    if (response.data.includes("OTP verified successfully")){
+      alert("verification successful")
+      return { success: true }; 
+    }else {
+      alert("verification failed")
+      return { success: false }; 
+    }
+  }
 };
 
 const signUpUser = async (firstName, lastName, email, password) => {
   // Simulate API call to sign up the user
-  return { success: true };  // Simulate successful sign-up
+  const response = await axios.post('http://127.0.0.1:8081/api/register/complete', {firstName, lastName, email, password, userRole :'student'})
+  console.log(response,"api complete");
+  if (response.status === 200) {
+    if (response.data.email) {
+      alert("Successfully Registred");
+      return { success: true };
+    }
+    else {
+      alert("Registration Failed");
+    }
+  }
 };
 
 export default SignInPage;

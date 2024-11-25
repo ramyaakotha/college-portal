@@ -11,30 +11,7 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [AssignModal,setAssignModal] = useState(false)
 
-  const [teachers, setTeachers] = useState([{
-    "id": 1,
-    "firstname": "John",
-    "lastname": "Doe",
-    "gender": "Male",
-    "mobilenumber": "1234567890",
-    "email": "john.doe@example.com",
-    "password": "hashedpassword",
-    "userRole": "teacher",
-    "otp": "123456",
-    "otpExpirationTime": "2024-12-31T23:59:59"
-  },
-  {
-    "id": 2,
-    "firstname": "Jane",
-    "lastname": "Smith",
-    "gender": "Female",
-    "mobilenumber": "0987654321",
-    "email": "jane.smith@example.com",
-    "password": "hashedpassword",
-    "userRole": "teacher",
-    "otp": "654321",
-    "otpExpirationTime": "2024-12-31T23:59:59"
-  }]);
+  const [teachers, setTeachers] = useState([]);
   const [courses, setCourses] = useState([
     {
       "id": 101,
@@ -80,9 +57,13 @@ const AdminDashboard = () => {
       setIsLoading(true);
       setErrorMessage('');
       try {
-        const response = await axios.get('/api/teachers');
-        const filteredTeachers = response.data.filter(user => user.userRole === 'teacher');
-        setTeachers(filteredTeachers);
+        const response = await fetch('http://127.0.0.1:8081/staff/teachers');
+        const json = await response.json();
+        // const filteredTeachers = response?.data?.filter(user => user.userRole === 'teacher');
+        console.log("my api data", json)
+        setTeachers((prevTeachers) => [...prevTeachers, ...json]);
+        // console.log(filteredTeachers, "filteredTeachers");
+        console.log(teachers,"my teachers");
       } catch (error) {
         setErrorMessage('Failed to load teacher data.');
       } finally {
@@ -154,9 +135,9 @@ const AdminDashboard = () => {
         </Button>
         <Button
           variant="contained"
-          color="primary"
+          color="success"
           onClick={handleModalOpen}
-        //   sx={{ marginLeft: 'auto' }}
+          sx={{ marginLeft: 'auto' }}
         >
           Onboard Teacher
         </Button>
@@ -185,7 +166,7 @@ const AdminDashboard = () => {
           {/* Staff View */}
           {view === 'staff' && (
             <Grid container spacing={2}>
-              {teachers.map((teacher) => (
+              {teachers?.map((teacher) => (
                 <Grid item xs={12} sm={6} md={4} key={teacher.id}>
                   <Card sx={{ maxWidth: 345 }}>
                     <CardContent>

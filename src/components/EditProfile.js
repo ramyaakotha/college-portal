@@ -19,15 +19,16 @@ const EditProfileModal = ({ open, onClose }) => {
     mobileNumber: '',
     email: '',
     password: '',
+    userRole: '',
   });
 
   const userID = localStorage.getItem('userID'); // Replace with actual userId (from context or auth)
-
+  const role = localStorage.getItem('userRole');
   // Fetch user data when modal opens
   useEffect(() => {
     if (open) {
       setLoading(true);
-      axios.get(`/api/users/${userID}`) // Replace with your GET API
+      axios.get(`http://127.0.0.1:8081/api/register/${userID}`) // Replace with your GET API
         .then((response) => setUserData(response.data))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
@@ -37,14 +38,14 @@ const EditProfileModal = ({ open, onClose }) => {
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
+    setUserData((prevData) => ({ ...prevData, [name]: value, userRole: role}));
   };
-
+  console.log(userData,"user data");
   // Submit updates to the API
   const handleSave = () => {
     setLoading(true);
     axios
-      .put(`/api/update/${userID}`, userData) // Replace with your PUT API
+      .put(`http://127.0.0.1:8081/api/register/${userID}`, userData) // Replace with your PUT API
       .then(() => {
         alert('Profile updated successfully!');
         onClose();

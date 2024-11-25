@@ -24,14 +24,13 @@ const LoginPage = () => {
     setErrorMessage(''); // Reset error message on each attempt
     try {
       // Replace with your actual login API call
-      const response = await axios.post('/api/login', { email, password });
-  
+      const response = await axios.post('http://127.0.0.1:8081/api/login', { email, password });
+      
       if (response.status === 200) {
-        const { userRole, userID } = response.data;  // Assuming the API response contains userRole and userID
-        
+        const { userRole, userId } = response.data;  // Assuming the API response contains userRole and userID
         // Store the user role and userID in localStorage
         localStorage.setItem('userRole', userRole);
-        localStorage.setItem('userID', userID);  // Storing userID
+        localStorage.setItem('userID', userId);  // Storing userID
 
         // Redirect to the respective dashboard based on the user role
         if (userRole === 'admin') {
