@@ -5,6 +5,7 @@ import axios from 'axios';
 import ProfileMenu from './ProfileMenu'; 
 import OnboardTeacherModal from './OnboardTeacherModal'; 
 import AssignTeachersModal from './AssignTeacherModal';
+import AddCourseModal from './AddCourseModal';
 
 const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,6 +68,9 @@ const AdminDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [view, setView] = useState('staff'); // 'staff' or 'courses'
   const [selectedCourse, setSelectedCourse] = useState(null)
+  const [addCourseModalOpen, setAddCourseModalOpen] = useState(false);
+
+
 
   const navigate = useNavigate();
 
@@ -118,6 +122,8 @@ const AdminDashboard = () => {
     setAssignModal(true)
 }
   const handleAssignModalClose = () => setAssignModal(false);
+  const handleAddCourseModalOpen = () => setAddCourseModalOpen(true);
+  const handleAddCourseModalClose = () => setAddCourseModalOpen(false);
 
   return (
     <Box sx={{ position: 'relative', padding: 3 }}>
@@ -148,13 +154,21 @@ const AdminDashboard = () => {
         </Button>
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           onClick={handleModalOpen}
-          sx={{ marginLeft: 'auto' }}
+        //   sx={{ marginLeft: 'auto' }}
         >
           Onboard Teacher
         </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleAddCourseModalOpen}
+        >
+          Add Course
+        </Button>
       </Box>
+     
 
       {/* Loading Spinner */}
       {isLoading ? (
@@ -219,6 +233,7 @@ const AdminDashboard = () => {
       {/* Onboard Teacher Modal */}
       <OnboardTeacherModal open={modalOpen} onClose={handleModalClose} />
       <AssignTeachersModal open={AssignModal} onClose={handleAssignModalClose} course={selectedCourse}/>
+      <AddCourseModal open={addCourseModalOpen} onClose={handleAddCourseModalClose} />
     </Box>
   );
 };
