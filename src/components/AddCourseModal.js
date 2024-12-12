@@ -13,7 +13,7 @@ const AddCourseModal = ({ open, onClose }) => {
     console.log(courseName, courseDesc, semester )
     try {
       const payload = { courseName, courseDesc, semester };
-      await axios.post('/api/courses', payload); // Replace with your API endpoint
+      await axios.post('http://127.0.0.1:8081/api/courses', payload); // Replace with your API endpoint
       alert('Course added successfully!');
       onClose();
     } catch (error) {

@@ -60,10 +60,7 @@ const AdminDashboard = () => {
         const response = await fetch('http://127.0.0.1:8081/staff/teachers');
         const json = await response.json();
         // const filteredTeachers = response?.data?.filter(user => user.userRole === 'teacher');
-        console.log("my api data", json)
-        setTeachers((prevTeachers) => [...prevTeachers, ...json]);
-        // console.log(filteredTeachers, "filteredTeachers");
-        console.log(teachers,"my teachers");
+        setTeachers(json);
       } catch (error) {
         setErrorMessage('Failed to load teacher data.');
       } finally {
@@ -79,7 +76,8 @@ const AdminDashboard = () => {
     setIsLoading(true);
     setErrorMessage('');
     try {
-      const response = await axios.get('/api/courses');
+      const response = await axios.get('http://127.0.0.1:8081/api/courses');
+      console.log("courses get response", response)
       setCourses(response.data);
     } catch (error) {
       setErrorMessage('Failed to load course data.');
@@ -167,16 +165,16 @@ const AdminDashboard = () => {
           {view === 'staff' && (
             <Grid container spacing={2}>
               {teachers?.map((teacher) => (
-                <Grid item xs={12} sm={6} md={4} key={teacher.id}>
-                  <Card sx={{ maxWidth: 345 }}>
+                <Grid item xs={12} sm={6} md={4} key={teacher?.id}>
+                  <Card sx={{ maxWidth: 345 }}>  
                     <CardContent>
                       <Avatar sx={{ width: 56, height: 56, marginBottom: 2, backgroundColor: '#3f51b5' }}>
-                        {teacher.firstname[0]}{teacher.lastname[0]}
+                        {teacher?.firstName[0]}{teacher?.lastName[0]}
                       </Avatar>
-                      <Typography variant="h6">{`${teacher.firstname} ${teacher.lastname}`}</Typography>
-                      <Typography variant="body2" color="textSecondary">{teacher.email}</Typography>
-                      <Typography variant="body2" color="textSecondary">{teacher.mobilenumber}</Typography>
-                      <Typography variant="body2" color="textSecondary">{teacher.gender}</Typography>
+                      <Typography variant="h6">{`${teacher?.firstName} ${teacher?.lastName}`}</Typography>
+                      <Typography variant="body2" color="textSecondary">{teacher?.email}</Typography>
+                      <Typography variant="body2" color="textSecondary">{teacher?.mobileNumber}</Typography>
+                      <Typography variant="body2" color="textSecondary">{teacher?.gender}</Typography>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -194,9 +192,9 @@ const AdminDashboard = () => {
                       <Typography variant="h6">{course.coursename}</Typography>
                       <Typography variant="body2" color="textSecondary">{course.courseDesc}</Typography>
                       <Typography variant="body2" color="textSecondary">Semester: {course.semester}</Typography>
-                      <Typography variant="body2" color="textSecondary">
+                      {/* <Typography variant="body2" color="textSecondary">
                         Teachers: {course.teachers.length > 0 ? course.teachers.join(', ') : 'None'}
-                      </Typography>
+                      </Typography> */}
                       <Button variant="contained" color="primary" sx={{ marginTop: 2 }}
                       onClick={()=>handleAssignModalOpen(course)}
                       >
@@ -213,7 +211,8 @@ const AdminDashboard = () => {
 
       {/* Onboard Teacher Modal */}
       <OnboardTeacherModal open={modalOpen} onClose={handleModalClose} />
-      <AssignTeachersModal open={AssignModal} onClose={handleAssignModalClose} course={selectedCourse}/>
+      <AssignTeachersModal open={AssignModal} onClose={handleAssignModalClose} course={selectedCourse} 
+      staff = {teachers}/>
       <AddCourseModal open={addCourseModalOpen} onClose={handleAddCourseModalClose} />
     </Box>
   );

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const OnboardTeacherModal = ({ open, onClose, onSuccess }) => {
+const OnboardTeacherModal = ({ open, onClose }) => {
   // State Variables
   const [formData, setFormData] = useState({
     firstName: "",
@@ -62,12 +62,15 @@ const OnboardTeacherModal = ({ open, onClose, onSuccess }) => {
     };
 
     try {
-      const response = await axios.post("/staff/onboard-teacher", payload); // Replace with your API endpoint
+      const response = await axios.post("http://127.0.0.1:8081/staff/onboard-teacher", payload); // Replace with your API endpoint
+      console.log("response payload", response)
       if (response.status === 200) {
-        onSuccess(); // Trigger success callback
+        // onSuccess(); // Trigger success callback
+        alert("Onboarded Successfully");
         onClose(); // Close modal
       }
     } catch (error) {
+      console.log(error,"error jdf");
       alert("Error onboarding teacher. Please try again.");
     } finally {
       setLoading(false);
